@@ -1,4 +1,43 @@
-###FINAL WORKING VERSION
+"""
+PDF Receipt & Invoice Segmentation Pipeline
+-------------------------------------------
+Author: Kyle TC-Singh
+
+DESCRIPTION:
+This script processes scanned PDF documents (e.g., receipts, invoices) containing 
+multiple elements on a single page. It detects individual elements, draws bounding 
+boxes for debugging, and splits them into separate PDF pages for structured analysis.
+
+FEATURES:
+- Auto-detection of receipts/invoices on each page
+- Adaptive kernel tuning for better box detection
+- Vertical stacking logic to group elements correctly
+- Smart post-processing to merge small fragments (e.g. headers)
+- Optional debug output with visual overlays and logging
+
+SETUP INSTRUCTIONS:
+1. Install required Python packages:
+   pip install opencv-python pillow pdf2image numpy
+
+2. You must also install Poppler for `pdf2image`:
+   - Windows: https://github.com/oschwartz10612/poppler-windows
+   - macOS:   brew install poppler
+   - Linux:   sudo apt install poppler-utils
+
+3. Optional: Create a virtual environment (recommended)
+   python -m venv myenv
+   myenv\Scripts\activate (Windows) or source myenv/bin/activate (macOS/Linux)
+
+CONFIGURATION:
+- Place your input PDFs in the 'input_folder' path.
+- Output PDFs and debug data will be saved in 'output_folder'.
+- Toggle `save_debug_output = True` to enable debug PDF + JSON logging.
+
+USAGE:
+- Run this script in your Python environment.
+- Ensure paths are correct and you have write permission for the output folder.
+
+"""
 
 import os, cv2, json, numpy as np
 from datetime import datetime
@@ -400,12 +439,6 @@ for filename in os.listdir(input_folder):
                 boxes=boxes, is_fullpage=is_fullpage,
                 is_final=is_final, log_file_path=detection_log_path
             )
-
-        # log_detection_results_global(
-        #     pdf_name=filename, page_index=idx,
-        #     boxes=boxes, is_fullpage=is_fullpage,
-        #     is_final=is_final, log_file_path=detection_log_path
-        # )
 
         if is_fullpage and show_box_stats:
             print(f"Page {idx+1} marked as FULL PAGE")
